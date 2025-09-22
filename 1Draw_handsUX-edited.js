@@ -5,9 +5,13 @@
 /* load images here */
 function prepareInteraction() {
   paintBrushImage = loadImage ('PaintBrush.png');
+  colourMapImage = loadImage ('ColourMap.jpg');
   //bgImage = loadImage('/images/background.png');
 
 }
+
+let wallpaper = (true);
+  let backgroundColour = [231, 147, 250, 50];
 
 let px = 0;
 let py = 0;
@@ -17,20 +21,43 @@ let Yvalue = 0
 
 
 function drawInteraction(faces, hands) {
-  colors = [
-    color(255, 18, 18), // red 
-    color(38, 18, 255), // blue 
-    color(42, 255, 18), // green
-    color(255, 176, 18), // orange
+  //background
+  if (wallpaper){
+  push();
+  
+  stroke (0, 0, 0);
+  strokeWeight (5);
+  fill (backgroundColour);
+  rect (0, 0, 1280, 720); //pink rectangle 
 
-  ];
+  fill (255, 255, 255, 50);
+  rect (620, 60, 600, 600);
 
-  selectedColor = colors[int(map(Yvalue, 0, height, 0, colors.length))]
+  image (colourMapImage, 110, 60); //colourMap image (size:400x600)
 
-  fill(selectedColor)
-  ellipse(width / 2, 100, 50) // shows current colour
+  pop ();
+  }
 
-  // hands part
+  //shows selected colour
+  push ();
+  colorMode (HSB);
+  
+  translate (110, 20);
+  let selectedColour = map(Yvalue, 0, height, 110, 660);
+  fill(selectedColour, 100, 100);
+  stroke (0, 0, 0);
+  strokeWeight (3);
+  rect (100, 60, 50, 50) // shows current colour
+  fill (0, 0, 0);
+  strokeWeight (0);
+  rotate (180);
+  text ('Curent Colour', 100, 100);
+
+  colorMode (RGB);
+  pop ();
+
+
+  // hands part-------------------------------------------------------------------------------------------------------------------------
   // for loop to capture if there is more than one hand on the screen. This applies the same process to all hands.
   for (let i = 0; i < hands.length; i++) {
     let hand = hands[i];
@@ -72,7 +99,7 @@ function drawInteraction(faces, hands) {
 
       //pain brush
       push ();
-      image (paintBrushImage, x -50, y -20);
+      image (paintBrushImage, x -50, y -25);
       pop ();
 
 
