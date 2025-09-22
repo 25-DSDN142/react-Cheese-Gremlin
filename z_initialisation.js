@@ -129,6 +129,12 @@ function videoLoaded() {
   painting = createGraphics(CaptureWidth, CaptureHeight);
   painting.colorMode(HSB);
   painting.clear();
+
+
+    // Create paintBrush buffer
+  paintBrush = createGraphics(CaptureWidth, CaptureHeight);
+  paintBrush.colorMode(HSB);
+  paintBrush.clear();
 }
 
 // Reset frame counter when switching modes

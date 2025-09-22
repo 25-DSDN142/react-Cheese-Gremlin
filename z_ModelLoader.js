@@ -7,7 +7,7 @@
  */
 
 let handPose, faceMesh;
-let video, painting, connections;
+let video, painting,paintBrush, connections;
 let hands = [];
 let faces = [];
 let options = {
@@ -62,6 +62,6 @@ function draw() {
 
   // Draw painting overlay
   image(painting, 0, 0);
-
+  image(paintBrush, 0, 0); ///// PHOEBE DID THIS 
   drawUI();
 }

@@ -100,7 +100,15 @@ function drawInteraction(faces, hands) {
         painting.stroke(selectedColour);
         painting.strokeWeight(16);
         painting.line(px, py, x, y);
+      
       }
+
+
+      paintBrush.clear();
+      paintBrush.image(paintBrushImage, x -50, y -25);
+
+
+
       px = x;
       py = y;
 
