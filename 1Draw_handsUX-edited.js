@@ -11,16 +11,24 @@ function prepareInteraction() {
 }
 
 let wallpaper = (true);
-  let backgroundColour = [231, 147, 250, 50];
-
+  let backgroundColour = [289, 41, 98, 0.5];
+let colourMapImageHeight = (600);
+let colourMapImageWidth = (400);
+let drawingPageWidth = (600);
+let drawingPageHeight = (600);
 let px = 0;
 let py = 0;
 let colors = [];
-let selectedColor;
 let Yvalue = 0
 
 
 function drawInteraction(faces, hands) {
+  push ();
+  colorMode (HSB);
+
+  let selectedColourHeightMap = map(Yvalue, 110, 660, 0, height);
+  let selectedColourMap = map (selectedColourHeightMap, 110, 660, 0, 360);
+  let selectedColour = [selectedColourMap, 100, 100];
   //background
   if (wallpaper){
   push();
@@ -28,32 +36,31 @@ function drawInteraction(faces, hands) {
   stroke (0, 0, 0);
   strokeWeight (5);
   fill (backgroundColour);
-  rect (0, 0, 1280, 720); //pink rectangle 
+  rect (0, 0, CaptureWidth, CaptureHeight); //pink rectangle background
 
-  fill (255, 255, 255, 50);
-  rect (620, 60, 600, 600);
-
-  image (colourMapImage, 110, 60); //colourMap image (size:400x600)
+  fill (0, 0, 100, 0.5); //white
+  rect ((CaptureWidth-((CaptureHeight-drawingPageHeight)/2)-drawingPageWidth), ((CaptureHeight-drawingPageHeight)/2), drawingPageWidth, drawingPageHeight); //drawingPage
+  
+  image (colourMapImage, (((CaptureWidth-((CaptureHeight-drawingPageHeight)/2)-drawingPageWidth)-colourMapImageWidth)/2), ((CaptureHeight-colourMapImageHeight)/2)); //colourMap image (size:400x600)
+  noFill ();
+  rect ((((CaptureWidth-((CaptureHeight-drawingPageHeight)/2)-drawingPageWidth)-colourMapImageWidth)/2), ((CaptureHeight-colourMapImageHeight)/2), colourMapImageWidth, colourMapImageHeight);
 
   pop ();
   }
 
   //shows selected colour
   push ();
-  colorMode (HSB);
-  
   translate (110, 20);
-  let selectedColour = map(Yvalue, 0, height, 110, 660);
-  fill(selectedColour, 100, 100);
+  fill(selectedColour);
   stroke (0, 0, 0);
   strokeWeight (3);
   rect (100, 60, 50, 50) // shows current colour
+
   fill (0, 0, 0);
   strokeWeight (0);
   rotate (180);
   text ('Curent Colour', 100, 100);
 
-  colorMode (RGB);
   pop ();
 
 
@@ -70,7 +77,7 @@ function drawInteraction(faces, hands) {
     */
     if (hand.handedness === "Left") {
       Yvalue = hand.index_finger_tip.y; // this will stay as zer untill the program sees a left hand 
-  
+      fill (selectedColour);
       ellipse (hand.index_finger_tip.x, hand.index_finger_tip.y, 10, 10);
     }
 
@@ -86,11 +93,11 @@ function drawInteraction(faces, hands) {
 
       let d = dist(indexFingerTipX, indexFingerTipY, thumbTipX, thumbTipY);
 
-      fill(selectedColor)
+      fill(selectedColour)
       ellipse(x, y, 50)
 
       if (d < 50) {
-        painting.stroke(selectedColor);
+        painting.stroke(selectedColour);
         painting.strokeWeight(16);
         painting.line(px, py, x, y);
       }
@@ -107,12 +114,13 @@ function drawInteraction(faces, hands) {
     /*
     Stop drawing on the hands here
     */
+   
   }
   // You can make addtional elements here, but keep the hand drawing inside the for loop. 
   //------------------------------------------------------
 
 
-
+pop ();
 }
 
 function drawConnections(hand) {
