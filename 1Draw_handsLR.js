@@ -25,11 +25,23 @@ function drawInteraction(faces, hands) {
 
     let whatGesture = detectHandGesture(hand)
 
-    if (whatGesture == "Peace") {
+    // if (whatGesture == "Pinch") { //struggels with Fist, point, thumbs up
+    //   fill(237, 156, 26) // orange
+    // }
+    // if (whatGesture == "Pointing") { //struggels with thumbs up, fist and pinch
+    //   fill(14, 237, 219) // light blue
+    // }
+    if (whatGesture == "Peace") { //good
       fill(255, 38, 219) // pink
     }
-    if (whatGesture == "Thumbs Up") {
+    if (whatGesture == "Thumbs Up") { // struggels slighly with open palm (not too big a deal)
       fill(255, 252, 48) // yellow
+    }
+    if (whatGesture == "Open Palm") { //good
+      fill(87, 245, 66) // green 
+    }
+    if (whatGesture == "Fist") { //struggels with pinch (good when pich turned off)
+      fill(36, 36, 237) // blue
     }
 
 
