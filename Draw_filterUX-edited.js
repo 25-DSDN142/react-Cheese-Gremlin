@@ -104,7 +104,7 @@ function drawInteraction(faces, hands) {
     */
 
     let faceWidth = (face.faceOval.width);
-    let faceheight = (face.faceOval.height);
+    let faceHeight = (face.faceOval.height);
 
     let noseWidth = (face.faceOval.width/3.5);
 
@@ -112,6 +112,8 @@ function drawInteraction(faces, hands) {
     let hatCentreY = (face.keypoints[10].y)
     let hatRightEndX = (hatCentreX+(faceWidth)/2.2);
     let hatLeftEndX = (hatCentreX-(faceWidth)/2.2);
+    let hatHeight = (faceHeight-20);
+    let hatLogoWidth = (face.faceOval.width/3)
 
     if (Luigi) {
     push ();
@@ -151,12 +153,30 @@ function drawInteraction(faces, hands) {
       fill (hatColour);
 
       //top
-      beginShape ();
-      vertex (hatLeftEndX-30, hatCentreY+20);
-      quadraticVertex (hatLeftEndX-150, hatCentreY-40, hatLeftEndX-60, hatCentreY-100);
-      quadraticVertex (hatLeftEndX+ faceWidth/3, hatCentreY-200, hatCentreX, hatCentreY-175);
-      quadraticVertex (hatRightEndX- faceWidth/3, hatCentreY-175, hatRightEndX+30, hatCentreY+20);
-      endShape ();
+      push ();
+      angleMode (DEGREES);
+      arc (hatCentreX, hatCentreY, faceWidth+30, hatHeight, 175, 5);
+      pop ();
+
+    
+      // beginShape (); //top part of hat attempt using shape, needs more work to be good but using arc for now as it is simpler. might revisit if enough time left
+      // vertex (hatLeftEndX-30, hatCentreY+20);
+      // quadraticVertex (hatLeftEndX-150, hatCentreY-40, hatLeftEndX-60, hatCentreY-100);
+      // quadraticVertex (hatLeftEndX+ faceWidth/3, hatCentreY-200, hatCentreX, hatCentreY-175);
+      // quadraticVertex (hatRightEndX- faceWidth/3, hatCentreY-175, hatRightEndX+30, hatCentreY+20);
+      // endShape ();
+
+
+      //logo
+      push ();
+      fill (255, 255, 255);
+      ellipse (hatCentreX, hatCentreY-(hatHeight/4), hatLogoWidth)
+      pop ();
+      push ();
+      textSize (50);
+      text ('L', hatCentreX, hatCentreY-(hatHeight/4));
+      pop ();
+
       //rim
       beginShape ();
       vertex (hatLeftEndX, hatCentreY);

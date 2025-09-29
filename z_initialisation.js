@@ -131,7 +131,7 @@ function videoLoaded() {
   painting.clear();
 
 
-    // Create paintBrush buffer
+    // Create paintBrush buffer ///// PHOEBE DID THIS 
   paintBrush = createGraphics(CaptureWidth, CaptureHeight);
   paintBrush.colorMode(HSB);
   paintBrush.clear();
