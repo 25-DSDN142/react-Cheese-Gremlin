@@ -5,13 +5,14 @@ let leftHorn;
 
 let angel = true;
 
-
+let OutlineThickness = (5);
+let GestureDetection = (true);
 let Luigi = (true);
   let skinColour = [255, 198, 157];
   let mustacheColour = [99, 59, 7];
 
 function prepareInteraction() {
-  marioImage = loadImage('mario.jpg');
+ 
 }
 
 function drawInteraction(faces, hands) {
@@ -31,14 +32,47 @@ function drawInteraction(faces, hands) {
     /*
     Start drawing on the hands here
     */
+    let whatGesture = detectHandGesture(hand);
 
-    let whatGesture = detectHandGesture(hand)
-    if (whatGesture == "Thumbs Up") {
+    //colours on hands to tell what gesture is aciavted
+    if (GestureDetection){
+    push ();
+      strokeWeight (OutlineThickness);
+      if (whatGesture == "Peace") { //good
+        fill(255, 38, 219) // pink
+      }
+      if (whatGesture == "Thumbs Up") { // struggels slighly with open palm (not too big a deal)
+        fill(255, 252, 48) // yellow
+      }
+      if (whatGesture == "Open Palm") { //good
+        fill(87, 245, 66) // green 
+      }
+      if (whatGesture == "Fist") { //struggels with pinch (good when pich turned off)
+        fill(36, 36, 237) // blue
+      }
+
+      if (hand.handedness === "Right") {
+        rect(hand.middle_finger_mcp.x, hand.middle_finger_mcp.y, 100)
+      }
+      if (hand.handedness === "Left") {
+      ellipse(hand.middle_finger_mcp.x, hand.middle_finger_mcp.y, 100)
+      }
+    pop ();
+    }
+
+
+    // if (whatGesture == "Peace") {
+    //   Luigi = false;
+    // }
+    if (whatGesture == "Thumbs Up") { //luigi
       Luigi = true;
     }
-    if (whatGesture == "Open Palm") {
-      angel = false;
-    }
+    // if (whatGesture == "Open Palm") {
+    //   Luigi = false;
+    // }
+    // if (whatGesture == "Fist") {
+    //   Luigi = false;
+    // }
 
     /*
     Stop drawing on the hands here
@@ -69,43 +103,74 @@ function drawInteraction(faces, hands) {
     Start drawing on the face here
     */
 
-    let faceWidth = face.faceOval.width;
-    let faceheight = face.faceOval.height;
-    let faceCenterX = face.faceOval.centerX;
-    let faceCenterY = face.faceOval.centerY;
+    let faceWidth = (face.faceOval.width);
+    let faceheight = (face.faceOval.height);
 
+    let noseWidth = (face.faceOval.width/3.5);
 
-    let mustacheCentreX = ((face.keypoints[4].x));
-    let mustacheCentreY = ((face.keypoints[4].y)+20);
-    let mustacheRightEndX = (face.keypoints[352].x);
-    let mustacheRightEndY = ((face.keypoints[352].y));
-    let mustacheLeftEndX = (face.keypoints[123].x);
-    let mustacheLeftEndY = ((face.keypoints[123].y));
+    let hatCentreX = (face.keypoints[10].x)
+    let hatCentreY = (face.keypoints[10].y)
+    let hatRightEndX = (hatCentreX+(faceWidth)/2.2);
+    let hatLeftEndX = (hatCentreX-(faceWidth)/2.2);
 
     if (Luigi) {
+    push ();
+    //variables for only luigi
+    let hatColour = [0, 148, 66];
+
+    let mustacheCentreX = (face.keypoints[4].x);
+    let mustacheCentreY = ((face.keypoints[4].y)+10);
+    let mustacheRightEndX = (face.keypoints[352].x);
+    let mustacheRightEndY = (face.keypoints[352].y);
+    let mustacheLeftEndX = (face.keypoints[123].x);
+    let mustacheLeftEndY = ((face.keypoints[123].y));
+    let mustacheThicknessY = (face.faceOval.height/4.5);
+    let mustacheThicknessX = (face.faceOval.width/15);
+
     // mustache
       stroke (0, 0, 0);
-      strokeWeight (5);
+      strokeWeight (OutlineThickness);
       fill (mustacheColour);
       beginShape ();
       vertex (mustacheCentreX, mustacheCentreY);
       quadraticVertex ((mustacheCentreX+mustacheRightEndX)/2, mustacheCentreY+20, mustacheRightEndX, mustacheRightEndY);
-      quadraticVertex ((mustacheCentreX+mustacheRightEndX)/2, mustacheCentreY+100, mustacheCentreX, mustacheCentreY+50); //middle
-      quadraticVertex ((mustacheCentreX+mustacheLeftEndX)/2, mustacheCentreY+100, mustacheLeftEndX, mustacheLeftEndY);
+      quadraticVertex (((mustacheCentreX+mustacheRightEndX)/2)+mustacheThicknessX, mustacheCentreY+mustacheThicknessY, mustacheCentreX, mustacheCentreY+(mustacheThicknessY)/1.6); //middle
+      quadraticVertex (((mustacheCentreX+mustacheLeftEndX)/2)-mustacheThicknessX, mustacheCentreY+mustacheThicknessY, mustacheLeftEndX, mustacheLeftEndY);
       quadraticVertex ((mustacheCentreX+mustacheLeftEndX)/2, mustacheCentreY+20, mustacheCentreX, mustacheCentreY);
       endShape ();
-      // beginShape ();
-      // vertex (mustacheCentreX, mustacheCentreY);
-      // quadraticVertex (mustacheCentreX +100, mustacheCentreY+20, mustacheCentreX+200, mustacheCentreY-10);
-      // quadraticVertex (mustacheCentreX+200, mustacheCentreY+50, mustacheCentreX+150, mustacheCentreY+40);
-      // endShape ();
 
     //nose
       stroke (0, 0, 0);
-      strokeWeight (5);
+      strokeWeight (OutlineThickness);
       fill (skinColour);
-      ellipse (face.keypoints[4].x, face.keypoints[4].y, 120, 120);
+      ellipse (face.keypoints[4].x, face.keypoints[4].y, noseWidth, noseWidth);
+    
+    //hat
+      stroke (0, 0, 0);
+      strokeWeight (OutlineThickness);
+      fill (hatColour);
+
+      //top
+      beginShape ();
+      vertex (hatLeftEndX-30, hatCentreY+20);
+      quadraticVertex (hatLeftEndX-150, hatCentreY-40, hatLeftEndX-60, hatCentreY-100);
+      quadraticVertex (hatLeftEndX+ faceWidth/3, hatCentreY-200, hatCentreX, hatCentreY-175);
+      quadraticVertex (hatRightEndX- faceWidth/3, hatCentreY-175, hatRightEndX+30, hatCentreY+20);
+      endShape ();
+      //rim
+      beginShape ();
+      vertex (hatLeftEndX, hatCentreY);
+      quadraticVertex (hatCentreX, hatCentreY-30, hatRightEndX, hatCentreY); //lower line (1st=centre)
+      quadraticVertex (hatRightEndX+32, hatCentreY+5, hatRightEndX+35, hatCentreY+20)
+      quadraticVertex (hatRightEndX+32, hatCentreY+35, hatRightEndX, hatCentreY+30);
+      quadraticVertex (hatCentreX, hatCentreY, hatLeftEndX, hatCentreY+30); //lower line (1st=centre)
+      quadraticVertex (hatLeftEndX-32, hatCentreY+35, hatLeftEndX-35, hatCentreY+20);
+      quadraticVertex (hatLeftEndX-32, hatCentreY+5, hatLeftEndX, hatCentreY);
+      endShape ();
+
+    pop ();
     }
+    
     /*
     Stop drawing on the face here
     */
