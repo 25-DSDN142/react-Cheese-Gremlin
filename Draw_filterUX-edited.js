@@ -5,9 +5,11 @@ let leftHorn;
 
 let angel = true;
 
+
 let OutlineThickness = (5);
 let GestureDetection = (true);
-let Luigi = (true);
+let Mario = (true);
+let Luigi = (false);
   let skinColour = [255, 198, 157];
   let mustacheColour = [99, 59, 7];
 
@@ -61,17 +63,21 @@ function drawInteraction(faces, hands) {
     }
 
 
-    // if (whatGesture == "Peace") {
-    //   Luigi = false;
-    // }
+    if (whatGesture == "Peace") { //mario
+      Mario = (true);
+      Luigi = (false);
+    }
     if (whatGesture == "Thumbs Up") { //luigi
-      Luigi = true;
+      Mario = (false);
+      Luigi = (true);
     }
     // if (whatGesture == "Open Palm") {
-    //   Luigi = false;
+    //   Mario = (false);
+    //   Luigi = (false);
     // }
     // if (whatGesture == "Fist") {
-    //   Luigi = false;
+    //   Mario = (false);
+    //   Luigi = (false);
     // }
 
     /*
@@ -99,6 +105,13 @@ function drawInteraction(faces, hands) {
      face.rightEye
      face.rightEyebrow
     */
+
+    //rotation code from tutorial class
+    let rotateAmount; 
+    let dx = (face.leftEye.centerX - face.rightEye.centerX);
+    let dy = (face.leftEye.centerY - face.rightEye.centerY);
+    rotateAmount = Math.atan2(dy, dx);
+
     /*
     Start drawing on the face here
     */
@@ -108,8 +121,11 @@ function drawInteraction(faces, hands) {
 
     let noseWidth = (face.faceOval.width/3.5);
 
-    let hatCentreX = (face.keypoints[10].x)
-    let hatCentreY = (face.keypoints[10].y)
+    let hatCentreX = (0)  //made 0 so hat is drawn at top left corner to canvas so rotationg aligns properly
+    let hatCentreY = (0)
+    let realHatCentreX = (face.keypoints[10].x) //used to translate hat to correct spot of face when using command to make hat rotate with face
+    let realHatCentreY = (face.keypoints[10].y)
+
     let hatRightEndX = (hatCentreX+(faceWidth)/2.2);
     let hatLeftEndX = (hatCentreX-(faceWidth)/2.2);
     let hatHeight = (faceHeight-20);
@@ -148,6 +164,104 @@ function drawInteraction(faces, hands) {
       ellipse (face.keypoints[4].x, face.keypoints[4].y, noseWidth, noseWidth);
     
     //hat
+    push ();
+    angleMode (RADIANS);
+    translate (realHatCentreX, realHatCentreY); //moves hat cenre from 0,0 to face point at middle, top of face
+    rotate(rotateAmount);
+
+      stroke (0, 0, 0);
+      strokeWeight (OutlineThickness);
+      fill (hatColour);
+
+      //top
+      push ();
+      angleMode (DEGREES);
+      arc (hatCentreX, hatCentreY, faceWidth+30, hatHeight*1.1, 175, 5);
+      pop ();
+
+    
+      // beginShape (); //top part of hat attempt using shape, needs more work to be good but using arc for now as it is simpler. might revisit if enough time left
+      // vertex (hatLeftEndX-30, hatCentreY+20);
+      // quadraticVertex (hatLeftEndX-150, hatCentreY-40, hatLeftEndX-60, hatCentreY-100);
+      // quadraticVertex (hatLeftEndX+ faceWidth/3, hatCentreY-200, hatCentreX, hatCentreY-175);
+      // quadraticVertex (hatRightEndX- faceWidth/3, hatCentreY-175, hatRightEndX+30, hatCentreY+20);
+      // endShape ();
+
+
+      //logo
+      push ();
+      fill (255, 255, 255);
+      ellipse (hatCentreX, hatCentreY-(hatHeight/4), hatLogoWidth)
+      pop ();
+      push ();
+      rectMode (CENTER);
+      textSize (hatLogoWidth-20);
+      text ('L', hatCentreX, hatCentreY-(hatHeight/4)+5);
+      pop ();
+
+      //rim
+      beginShape ();
+      vertex (hatLeftEndX, hatCentreY);
+      quadraticVertex (hatCentreX, hatCentreY-30, hatRightEndX, hatCentreY); //lower line (1st=centre)
+      quadraticVertex (hatRightEndX+32, hatCentreY+5, hatRightEndX+35, hatCentreY+20)
+      quadraticVertex (hatRightEndX+32, hatCentreY+35, hatRightEndX, hatCentreY+30);
+      quadraticVertex (hatCentreX, hatCentreY, hatLeftEndX, hatCentreY+30); //lower line (1st=centre)
+      quadraticVertex (hatLeftEndX-32, hatCentreY+35, hatLeftEndX-35, hatCentreY+20);
+      quadraticVertex (hatLeftEndX-32, hatCentreY+5, hatLeftEndX, hatCentreY);
+      endShape ();
+    pop (); //hat
+
+    pop (); //luigi
+    }
+
+    if (Mario) {
+    push ();
+    //variables for only mario
+    let hatColour = [198, 25, 8];
+
+    let mustacheCentreX = (face.keypoints[4].x);
+    let mustacheCentreY = ((face.keypoints[4].y)+10);
+    let mustacheRightEndX = (face.keypoints[352].x);
+    let mustacheRightEndY = (face.keypoints[352].y);
+    let rightSwoopMiddle = dist (mustacheCentreX, mustacheCentreY, mustacheRightEndX, mustacheRightEndY);
+    let mustacheLeftEndX = (face.keypoints[123].x);
+    let mustacheLeftEndY = ((face.keypoints[123].y));
+    let mustacheThicknessY = (face.faceOval.height/4.5);
+
+    // mustache
+      stroke (0, 0, 0);
+      strokeWeight (OutlineThickness);
+      fill (mustacheColour);
+
+      beginShape ();
+      vertex (mustacheCentreX, mustacheCentreY); //top middle
+      quadraticVertex (mustacheCentreX+(rightSwoopMiddle/2), mustacheCentreY+20, mustacheRightEndX, mustacheRightEndY); //right end
+      quadraticVertex (mustacheRightEndX, mustacheCentreY+(mustacheThicknessY/3), mustacheRightEndX-(rightSwoopMiddle/4), mustacheCentreY+(mustacheThicknessY/4));
+      quadraticVertex (mustacheCentreX+(rightSwoopMiddle/1.5), mustacheCentreY+(mustacheThicknessY/1.5), mustacheCentreX+(rightSwoopMiddle/2.5), mustacheCentreY+(mustacheThicknessY/2));
+      quadraticVertex (mustacheCentreX+(rightSwoopMiddle/4), mustacheCentreY+(mustacheThicknessY/1.1), mustacheCentreX, mustacheCentreY+(mustacheThicknessY)/1.6);
+      endShape ();
+      //(mustacheRightEndX-(rightSwoopMiddle/4))
+
+      // beginShape ();
+      // vertex (mustacheCentreX, mustacheCentreY); //top middle
+      // quadraticVertex ((mustacheCentreX+mustacheRightEndX)/2, mustacheCentreY+20, mustacheRightEndX, mustacheRightEndY); //right end
+      // quadraticVertex (((mustacheCentreX+mustacheRightEndX)/2)+mustacheThicknessX, mustacheCentreY+mustacheThicknessY, mustacheCentreX, mustacheCentreY+(mustacheThicknessY)/1.6); //bottom middle
+      // quadraticVertex (((mustacheCentreX+mustacheLeftEndX)/2)-mustacheThicknessX, mustacheCentreY+mustacheThicknessY, mustacheLeftEndX, mustacheLeftEndY); //left end
+      // quadraticVertex ((mustacheCentreX+mustacheLeftEndX)/2, mustacheCentreY+20, mustacheCentreX, mustacheCentreY);
+      // endShape ();
+
+    //nose
+      stroke (0, 0, 0);
+      strokeWeight (OutlineThickness);
+      fill (skinColour);
+      ellipse (face.keypoints[4].x, face.keypoints[4].y, noseWidth*1.1, noseWidth);
+    
+    //hat
+    push ();
+    angleMode (RADIANS);
+    translate (realHatCentreX, realHatCentreY); //moves hat cenre from 0,0 to face point at middle, top of face
+    rotate(rotateAmount);
+
       stroke (0, 0, 0);
       strokeWeight (OutlineThickness);
       fill (hatColour);
@@ -173,8 +287,8 @@ function drawInteraction(faces, hands) {
       ellipse (hatCentreX, hatCentreY-(hatHeight/4), hatLogoWidth)
       pop ();
       push ();
-      textSize (50);
-      text ('L', hatCentreX, hatCentreY-(hatHeight/4));
+      textSize (hatLogoWidth-20);
+      text ('M', hatCentreX, hatCentreY-(hatHeight/4)+5);
       pop ();
 
       //rim
@@ -187,8 +301,9 @@ function drawInteraction(faces, hands) {
       quadraticVertex (hatLeftEndX-32, hatCentreY+35, hatLeftEndX-35, hatCentreY+20);
       quadraticVertex (hatLeftEndX-32, hatCentreY+5, hatLeftEndX, hatCentreY);
       endShape ();
+    pop (); //hat
 
-    pop ();
+    pop (); //mario
     }
     
     /*
