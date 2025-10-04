@@ -119,12 +119,14 @@ function drawInteraction(faces, hands) {
     let faceWidth = (face.faceOval.width);
     let faceHeight = (face.faceOval.height);
 
+    let noseCentreX = (face.keypoints[4].x);
+    let noseCentreY = (face.keypoints[4].y);
     let noseWidth = (face.faceOval.width/3.5);
 
     let hatCentreX = (0)  //made 0 so hat is drawn at top left corner to canvas so rotationg aligns properly
     let hatCentreY = (0)
-    let realHatCentreX = (face.keypoints[10].x) //used to translate hat to correct spot of face when using command to make hat rotate with face
-    let realHatCentreY = (face.keypoints[10].y)
+    let realHatCentreX = (face.keypoints[151].x) //used to translate hat to correct spot of face when using command to make hat rotate with face
+    let realHatCentreY = (face.keypoints[151].y)
 
     let hatRightEndX = (hatCentreX+(faceWidth)/2.2);
     let hatLeftEndX = (hatCentreX-(faceWidth)/2.2);
@@ -142,8 +144,9 @@ function drawInteraction(faces, hands) {
     let mustacheRightEndY = (face.keypoints[352].y);
     let mustacheLeftEndX = (face.keypoints[123].x);
     let mustacheLeftEndY = ((face.keypoints[123].y));
-    let mustacheThicknessY = (face.faceOval.height/4.5);
     let mustacheThicknessX = (face.faceOval.width/15);
+    let mustacheThicknessY = (face.faceOval.height/4.5);
+    
 
     // mustache
       stroke (0, 0, 0);
@@ -161,7 +164,7 @@ function drawInteraction(faces, hands) {
       stroke (0, 0, 0);
       strokeWeight (OutlineThickness);
       fill (skinColour);
-      ellipse (face.keypoints[4].x, face.keypoints[4].y, noseWidth, noseWidth);
+      ellipse (noseCentreX, noseCentreY, noseWidth, noseWidth);
     
     //hat
     push ();
@@ -221,40 +224,95 @@ function drawInteraction(faces, hands) {
 
     let mustacheCentreX = (face.keypoints[4].x);
     let mustacheCentreY = ((face.keypoints[4].y)+10);
+
     let mustacheRightEndX = (face.keypoints[352].x);
     let mustacheRightEndY = (face.keypoints[352].y);
-    let rightSwoopMiddle = dist (mustacheCentreX, mustacheCentreY, mustacheRightEndX, mustacheRightEndY);
+    //let rightSwoopMiddle = dist (mustacheCentreX, mustacheCentreY, mustacheRightEndX, mustacheRightEndY); 
+    let rightSwoop3X = ((mustacheCentreX + mustacheRightEndX)/2.02); //left upper point of middle mustache swoop on right hand since
+    let rightSwoop1X = ((rightSwoop3X + mustacheRightEndX)/1.99); //left upper point of right most mustache swoop on right hand since
+    let rightSwoop2X = ((rightSwoop3X + rightSwoop1X)/1.97);
+    let rightSwoop4X = ((mustacheCentreX + rightSwoop3X)/2);
+    let mustacheRightY = (((noseCentreY + mustacheRightEndY)/2)+20);
+
     let mustacheLeftEndX = (face.keypoints[123].x);
     let mustacheLeftEndY = ((face.keypoints[123].y));
+    let leftSwoop3X = ((mustacheCentreX + mustacheLeftEndX)/1.97); //left upper point of middle mustache swoop on left hand since
+    let leftSwoop1X = ((leftSwoop3X + mustacheLeftEndX)/1.99); //left upper point of left most mustache swoop on left hand since
+    let leftSwoop2X = ((leftSwoop3X + leftSwoop1X)/2.02);
+    let leftSwoop4X = ((mustacheCentreX + leftSwoop3X)/2);
+    let mustacheLeftY = (((noseCentreY + mustacheLeftEndY)/2)+20);
+
     let mustacheThicknessY = (face.faceOval.height/4.5);
+
+    
 
     // mustache
       stroke (0, 0, 0);
       strokeWeight (OutlineThickness);
       fill (mustacheColour);
 
-      beginShape ();
-      vertex (mustacheCentreX, mustacheCentreY); //top middle
-      quadraticVertex (mustacheCentreX+(rightSwoopMiddle/2), mustacheCentreY+20, mustacheRightEndX, mustacheRightEndY); //right end
-      quadraticVertex (mustacheRightEndX, mustacheCentreY+(mustacheThicknessY/3), mustacheRightEndX-(rightSwoopMiddle/4), mustacheCentreY+(mustacheThicknessY/4));
-      quadraticVertex (mustacheCentreX+(rightSwoopMiddle/1.5), mustacheCentreY+(mustacheThicknessY/1.5), mustacheCentreX+(rightSwoopMiddle/2.5), mustacheCentreY+(mustacheThicknessY/2));
-      quadraticVertex (mustacheCentreX+(rightSwoopMiddle/4), mustacheCentreY+(mustacheThicknessY/1.1), mustacheCentreX, mustacheCentreY+(mustacheThicknessY)/1.6);
-      endShape ();
-      //(mustacheRightEndX-(rightSwoopMiddle/4))
-
+      //mustache attempt#1
       // beginShape ();
       // vertex (mustacheCentreX, mustacheCentreY); //top middle
-      // quadraticVertex ((mustacheCentreX+mustacheRightEndX)/2, mustacheCentreY+20, mustacheRightEndX, mustacheRightEndY); //right end
-      // quadraticVertex (((mustacheCentreX+mustacheRightEndX)/2)+mustacheThicknessX, mustacheCentreY+mustacheThicknessY, mustacheCentreX, mustacheCentreY+(mustacheThicknessY)/1.6); //bottom middle
-      // quadraticVertex (((mustacheCentreX+mustacheLeftEndX)/2)-mustacheThicknessX, mustacheCentreY+mustacheThicknessY, mustacheLeftEndX, mustacheLeftEndY); //left end
-      // quadraticVertex ((mustacheCentreX+mustacheLeftEndX)/2, mustacheCentreY+20, mustacheCentreX, mustacheCentreY);
+      // quadraticVertex (mustacheCentreX+(rightSwoopMiddle/2), mustacheCentreY+20, mustacheRightEndX, mustacheRightEndY); //right end
+      // quadraticVertex (mustacheRightEndX, mustacheCentreY+(mustacheThicknessY/3), mustacheRightEndX-(rightSwoopMiddle/4), mustacheCentreY+(mustacheThicknessY/4));
+      // quadraticVertex (mustacheCentreX+(rightSwoopMiddle/1.5), mustacheCentreY+(mustacheThicknessY/1.5), mustacheCentreX+(rightSwoopMiddle/2.5), mustacheCentreY+(mustacheThicknessY/2));
+      // quadraticVertex (mustacheCentreX+(rightSwoopMiddle/4), mustacheCentreY+(mustacheThicknessY/1.1), mustacheCentreX, mustacheCentreY+(mustacheThicknessY)/1.6);
       // endShape ();
+
+      //mustache attempt#2
+      // beginShape (); 
+      // vertex (mustacheCentreX, mustacheCentreY); //top middle
+      // quadraticVertex (rightSwoop3X, mustacheCentreY+20, mustacheRightEndX, mustacheRightEndY); //right end
+      // quadraticVertex (mustacheRightEndX, mustacheRightY+(mustacheThicknessY/3), rightSwoop1X, mustacheRightY+(mustacheThicknessY/4));
+      // quadraticVertex (rightSwoop2X, mustacheRightY+(mustacheThicknessY/1.5), rightSwoop3X, mustacheRightY+(mustacheThicknessY/2));
+      // quadraticVertex (rightSwoop4X, mustacheRightY+(mustacheThicknessY/1.1), mustacheCentreX, mustacheRightY+(mustacheThicknessY)/1.6);
+      // endShape ();
+      
+      //mustache attempt#3
+      // beginShape (); //right side
+      // vertex (mustacheCentreX, mustacheCentreY); //top middle
+      // quadraticVertex (rightSwoop3X, mustacheCentreY+(faceHeight/20), mustacheRightEndX, mustacheRightEndY); //right end
+      // quadraticVertex (mustacheRightEndX, mustacheRightY+(faceHeight/14), rightSwoop1X, mustacheRightY+(faceHeight/18));
+      // quadraticVertex (rightSwoop2X, mustacheRightY+(faceHeight/7), rightSwoop3X, mustacheRightY+(faceHeight/9));
+      // quadraticVertex (rightSwoop4X, mustacheRightY+(faceHeight/5), mustacheCentreX, mustacheCentreY+(faceHeight/7));
+      // endShape ();
+      // beginShape (); //right side
+      // vertex (mustacheCentreX, mustacheCentreY); //top middle
+      // quadraticVertex (leftSwoop3X, mustacheCentreY+(faceHeight/20), mustacheLeftEndX, mustacheLeftEndY); //right end
+      // quadraticVertex (mustacheLeftEndX, mustacheLeftY+(faceHeight/14), leftSwoop1X, mustacheLeftY+(faceHeight/18));
+      // quadraticVertex (leftSwoop2X, mustacheLeftY+(faceHeight/7), leftSwoop3X, mustacheLeftY+(faceHeight/9));
+      // quadraticVertex (leftSwoop4X, mustacheLeftY+(faceHeight/5), mustacheCentreX, mustacheCentreY+(faceHeight/7));
+      // endShape ();
+
+      //mustache attempt#3 commbined
+      push ();
+
+
+      beginShape (); 
+      vertex (mustacheCentreX, mustacheCentreY); //top middle
+      quadraticVertex (rightSwoop3X, mustacheCentreY+(faceHeight/20), mustacheRightEndX, mustacheRightEndY); //right end
+      quadraticVertex (mustacheRightEndX, mustacheRightY+(faceHeight/14), rightSwoop1X, mustacheRightY+(faceHeight/18));
+      quadraticVertex (rightSwoop2X, mustacheRightY+(faceHeight/7), rightSwoop3X, mustacheRightY+(faceHeight/9));
+      quadraticVertex (rightSwoop4X, mustacheRightY+(faceHeight/5), mustacheCentreX, mustacheCentreY+(faceHeight/7));
+      quadraticVertex (leftSwoop4X, mustacheLeftY+(faceHeight/5), leftSwoop3X, mustacheLeftY+(faceHeight/9));
+      quadraticVertex (leftSwoop2X, mustacheLeftY+(faceHeight/7), leftSwoop1X, mustacheLeftY+(faceHeight/18));
+      quadraticVertex (mustacheLeftEndX, mustacheLeftY+(faceHeight/14), mustacheLeftEndX, mustacheLeftEndY);
+      quadraticVertex (leftSwoop3X, mustacheCentreY+(faceHeight/20), mustacheCentreX, mustacheCentreY);
+      endShape ();
+      pop ();
+
+      pop ();//mustache
+
+
+    
+
 
     //nose
       stroke (0, 0, 0);
       strokeWeight (OutlineThickness);
       fill (skinColour);
-      ellipse (face.keypoints[4].x, face.keypoints[4].y, noseWidth*1.1, noseWidth);
+      ellipse (noseCentreX, noseCentreY, noseWidth*1.1, noseWidth);
     
     //hat
     push ();
