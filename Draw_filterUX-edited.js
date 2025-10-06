@@ -5,7 +5,7 @@ let leftHorn;
 
 let angel = true;
 
-
+let speak = (true);
 let OutlineThickness = (5);
 let GestureDetection = (true);
 let Mario = (false);
@@ -130,6 +130,7 @@ function drawInteraction(faces, hands) {
     
     let faceWidth = (face.faceOval.width);
     let faceHeight = (face.faceOval.height);
+
 
     let hatCentreX = (0)  //made 0 so hat is drawn at top left corner to canvas so rotationg aligns properly
     let hatCentreY = (0)
@@ -539,11 +540,35 @@ function drawInteraction(faces, hands) {
     pop (); //Peach
     }
 
+    //"speak" displays "catch phrase" for individual characters when mouth open
+    let mouthSize = dist (face.keypoints[13].x, face.keypoints[13].y, face.keypoints[14].x, face.keypoints[14].y)
+    if (speak){
+    stroke (0, 0, 0);
+    strokeWeight (10);
+    fill (255, 255, 255);
+    textSize (70);
+
+    if (Mario && mouthSize>50){
+      text ("its-a me! Mario!", 640, 850);
+    }
+
+    if (Luigi && mouthSize>50){
+      text ("Let's-a go!", 640, 850);
+    }
+    if (Toad && mouthSize>50){
+      text ("Yahoo!", 640, 850);
+    }
+
+    if (Peach && mouthSize>50){
+      text ("Peachy!", 640, 850);
+    }
+    } //speak
+
+
 
     /*
     Stop drawing on the face here
     */
-
   }
   //------------------------------------------------------
   // You can make addtional elements here, but keep the face drawing inside the for loop. 
