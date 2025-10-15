@@ -1,13 +1,21 @@
 // ----=  HANDS  =----
-let halo;
-let rightHorn;
-let leftHorn;
+let GestureDetection = (false);
 
-let angel = true;
+let drawOverlay = (true);
+let hideOverlay = (false);
+let showOverlay = (true);
+let overlayScale = (1);
+let brickScale = (0.726);
+let levelScale = (0.726);
+let rainbowScale = (0.72);
+
+let frames = (true);
+let drawBrickFrame = (false);
+let drawLevelFrame = (false);
+let drawRainbowFrame = (false);
 
 let speak = (true);
 let OutlineThickness = (5);
-let GestureDetection = (true);
 let Mario = (false);
 let Luigi = (false);
 let Toad = (false);
@@ -17,6 +25,13 @@ let Peach = (true);
 
 
 function prepareInteraction() {
+ Overlay = loadImage ('/images/Overlay.png');
+ BrickFrame = loadImage ('/images/BrickFrame.png');
+ LevelFrame = loadImage ('/images/LevelFrame.png');
+ RainbowFrame = loadImage ('/images/RainbowFrame.png');
+ smallBrickFrame = loadImage ('/images/smallBrickFrame.png');
+ smallLevelFrame = loadImage ('/images/smallLevelFrame.png');
+ smallRainbowFrame = loadImage ('/images/smallRainbowFrame.png');
  
 }
 
@@ -65,6 +80,7 @@ function drawInteraction(faces, hands) {
     pop ();
     }
 
+    if (hand.handedness === "Left"){ //characters
 
     if (whatGesture == "Peace") { //mario
       Mario = (true);
@@ -84,12 +100,38 @@ function drawInteraction(faces, hands) {
       Toad = (true);
       Peach = (false);
     }
-    if (whatGesture == "Fist") {
+    if (whatGesture == "Fist") { //Peach
       Mario = (false);
       Luigi = (false);
       Toad = (false);
       Peach = (true);
     }
+    }// left hand
+
+    if (hand.handedness === "Right"){
+
+    if (whatGesture == "Peace") { //brick
+      drawBrickFrame = (true);
+      drawLevelFrame = (false);
+      drawRainbowFrame = (false);
+    }
+    if (whatGesture == "Thumbs Up") { //level/ coin
+      drawBrickFrame = (false);
+      drawLevelFrame = (true);
+      drawRainbowFrame = (false);
+    }
+    if (whatGesture == "Open Palm") { //rainbow
+      drawBrickFrame = (false);
+      drawLevelFrame = (false);
+      drawRainbowFrame = (true);
+    }
+    if (whatGesture == "Fist") { //no frame
+      drawBrickFrame = (false);
+      drawLevelFrame = (false);
+      drawRainbowFrame = (false);
+    }
+    } //right hand
+    
 
     /*
     Stop drawing on the hands here
@@ -572,7 +614,128 @@ function drawInteraction(faces, hands) {
   }
   //------------------------------------------------------
   // You can make addtional elements here, but keep the face drawing inside the for loop. 
+
+
+
+//frames
+if (frames){
+if (drawBrickFrame){
+push ();
+imageMode (CENTER);
+translate (640, 480);
+
+if (hideOverlay){ //down arrow to hide UI
+  if (brickScale<1){ 
+  brickScale = brickScale+0.011
+  scale (brickScale);
+  image (BrickFrame, 0, 0, 1280, 960);
+  }
+  else {
+    image (BrickFrame, 0, 0, 1280, 960);
+  }
 }
+if (showOverlay){ //up arrow to show UI
+  if (brickScale>0.726) { 
+  brickScale = brickScale-0.0105
+  scale (brickScale);
+  image (BrickFrame, 0, 0, 1280, 960);
+  }
+  else {
+    scale (0.726);
+    image (BrickFrame, 0, 0, 1280, 960);
+  }
+}
+pop ();
+} //brick frame
+
+if (drawLevelFrame){
+push ();
+imageMode (CENTER);
+translate (640, 480);
+
+if (hideOverlay){ //down arrow to hide UI
+  if (levelScale<1){ 
+  levelScale = levelScale+0.011
+  scale (levelScale);
+  image (LevelFrame, 0, 0, 1280, 960);
+  }
+  else {
+    image (LevelFrame, 0, 0, 1280, 960);
+  }
+}
+if (showOverlay){ //up arrow to show UI
+  if (levelScale>0.726) { 
+  levelScale = levelScale-0.0105
+  scale (levelScale);
+  image (LevelFrame, 0, 0, 1280, 960);
+  }
+  else {
+    scale (0.726);
+    image (LevelFrame, 0, 0, 1280, 960);
+  }
+}
+pop ();
+} //level frame
+
+if (drawRainbowFrame){
+push ();
+imageMode (CENTER);
+translate (640, 480);
+
+if (hideOverlay){ //down arrow to hide UI
+  if (rainbowScale<1) { 
+  rainbowScale = rainbowScale+0.0105 //0.0077
+  scale (rainbowScale);
+  image (RainbowFrame, 0, 0, 1280, 960);
+  }
+  else {
+    image (RainbowFrame, 0, 0, 1280, 960);
+  }
+  }
+if (showOverlay){ //up arrow to show UI
+  if (rainbowScale>0.72){ 
+  rainbowScale = rainbowScale-0.0115
+  scale (rainbowScale);
+  image (RainbowFrame, 0, 0, 1280, 960);
+  }
+  else {
+    scale (0.72);
+    image (RainbowFrame, 0, 0, 1280, 960);
+  }
+  }
+pop ();
+} //rianbow frame
+
+} //stop drawing frames
+
+//overlay 
+if (drawOverlay){
+push ();
+imageMode (CENTER);
+translate (640, 480);
+scale (1);
+
+if (hideOverlay){ //down arrow to hide UI
+  if (overlayScale<1.388){ 
+  overlayScale = overlayScale+0.015
+  scale (overlayScale);
+  image (Overlay, 0, 0, 1280, 960);
+  }
+}
+if (showOverlay){ //up arrow to show UI
+  if (overlayScale>1) { 
+  overlayScale = overlayScale-0.015
+  scale (overlayScale);
+  image (Overlay, 0, 0, 1280, 960);
+  }
+  else {
+    image (Overlay, 0, 0, 1280, 960);
+  }
+}
+pop ();
+} //strop drawing overlay
+
+} //stop drawing for drawInteraction
 
 
 function drawConnections(hand) {

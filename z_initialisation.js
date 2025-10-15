@@ -663,6 +663,18 @@ function keyPressed() {
   if (key === '!') {
     saveCanvas('ml5-capture-' + frameCount, 'png');
   }
+
+  //self added -------------------------------------------------------------------------
+  //hide UI
+  if (keyCode === DOWN_ARROW){
+      hideOverlay = (true);
+      showOverlay = (false);
+    }
+  //show UI
+  if (keyCode === UP_ARROW){
+      showOverlay = (true);
+      hideOverlay = (false);
+    }
 }
 
 // start of draw() loop
