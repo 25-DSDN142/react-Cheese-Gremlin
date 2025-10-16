@@ -193,8 +193,12 @@ function initializeVideo() {
 
 // Add gesture detection function
 function detectHandGesture(hand) {
+
   if (!hand || hand.confidence < 0.7) return null;
-  
+
+  let indexFingerPosX = (hand.index_finger_tip.x);
+  let indexFingerPosY = (hand.index_finger_tip.y);
+
   // Pinch detection
   let thumbTip = hand.thumb_tip;
   let indexTip = hand.index_finger_tip;
@@ -635,6 +639,7 @@ function mousePressed() {
 
 // Keyboard shortcuts
 function keyPressed() {
+
   // Hide/show UI
   if (key === 'h' || key === 'H') {
     uiVisible = !uiVisible;
@@ -665,16 +670,31 @@ function keyPressed() {
   }
 
   //self added -------------------------------------------------------------------------
-  //hide UI
+  //hide selection UI
   if (keyCode === DOWN_ARROW){
       hideOverlay = (true);
       showOverlay = (false);
     }
-  //show UI
+  //show selection UI
   if (keyCode === UP_ARROW){
       showOverlay = (true);
       hideOverlay = (false);
     }
+  //place sticker
+  if (key === "s" || key === 'S') {
+    placeSticker = (true);
+    sticker = random([coinSticker, flowerSticker, goombaSticker, piranhaSticker, shellSticker, starSticker, tubeSticker]); //chooses what random sickers is placed
+  }
+  //info box
+  if (key === "["){
+    if (infoBox){
+      infoBox = (false);
+    }
+    else {
+      infoBox = (true);
+    }
+  }
+  
 }
 
 // start of draw() loop

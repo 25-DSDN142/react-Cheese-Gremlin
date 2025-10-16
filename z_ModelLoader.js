@@ -57,7 +57,7 @@ function draw() {
   }
   // Draw interaction between faces and hands
 
-  drawInteraction(faces, confidentlyHands);
+  drawInteraction(faces, confidentlyHands); 
 
 
   // Draw painting overlay

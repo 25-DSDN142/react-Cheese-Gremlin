@@ -1,7 +1,20 @@
 // ----=  HANDS  =----
 let GestureDetection = (false);
 
-let drawOverlay = (true);
+let placeSticker = (false);
+let drawSticker = (true);
+
+let drawCoinSticker = (false);
+let drawFlowerSticker = (false);
+let drawGoombaSticker = (false);
+let drawPiranhaSticker = (false);
+let drawShellSticker = (false);
+let drawStarSticker = (false);
+let drawTubeSticker = (false);
+
+let infoBox = (false);
+
+let overlay = (true);
 let hideOverlay = (false);
 let showOverlay = (true);
 let overlayScale = (1);
@@ -32,8 +45,25 @@ function prepareInteraction() {
  smallBrickFrame = loadImage ('/images/smallBrickFrame.png');
  smallLevelFrame = loadImage ('/images/smallLevelFrame.png');
  smallRainbowFrame = loadImage ('/images/smallRainbowFrame.png');
+//sickers
+ coinSticker = loadImage ('/images/coin.png');
+ flowerSticker = loadImage ('/images/flower.png');
+ goombaSticker = loadImage ('/images/goomba.png');
+ piranhaSticker = loadImage ('/images/piranha.png');
+ shellSticker = loadImage ('/images/shell.png');
+ starSticker = loadImage ('/images/star.png');
+ tubeSticker = loadImage ('/images/tube.png');
+//speak
+ marioSpeak = loadImage ('/images/MarioSpeak.png');
+ luigiSpeak = loadImage ('/images/LuigiSpeak.png');
+ toadSpeak = loadImage ('/images/ToadSpeak.png');
+ peachSpeak = loadImage ('/images/PeachSpeak.png');
  
+ pixelFont = loadFont ('pixelFont.otf');
+ marioFont = loadFont ('SuperMario256.ttf');
 }
+
+
 
 function drawInteraction(faces, hands) {
 
@@ -44,10 +74,16 @@ function drawInteraction(faces, hands) {
   // for loop to capture if there is more than one hand on the screen. This applies the same process to all hands.
   for (let i = 0; i < hands.length; i++) {
     let hand = hands[i];
+    let indexFingerTipX = hand.index_finger_tip.x;
+    let indexFingerTipY = hand.index_finger_tip.y;
+    let stickerPosX = indexFingerTipX
+    let stickerPosY = indexFingerTipY
+
     if (showKeypoints) {
       drawPoints(hand)
       drawConnections(hand)
     }
+
     // console.log(hand);
     /*
     Start drawing on the hands here
@@ -106,6 +142,23 @@ function drawInteraction(faces, hands) {
       Toad = (false);
       Peach = (true);
     }
+
+    //placae sticker
+  if (drawSticker){
+    push ();
+    imageMode (CENTER);
+
+
+
+    if (placeSticker){ //places random sticker when s is pressed
+      image (sticker, stickerPosX, stickerPosY, 120, 120);
+
+    } //place stickers
+    
+
+    pop ();
+  }//drawstickers 
+
     }// left hand
 
     if (hand.handedness === "Right"){
@@ -582,6 +635,9 @@ function drawInteraction(faces, hands) {
     pop (); //Peach
     }
 
+    drawFrames (); //draws frame function so "speak" shows above
+    drawOverlay (); //draws overlay function so "speak" shows above
+
     //"speak" displays "catch phrase" for individual characters when mouth open
     let mouthSize = dist (face.keypoints[13].x, face.keypoints[13].y, face.keypoints[14].x, face.keypoints[14].y)
     if (speak){
@@ -591,18 +647,22 @@ function drawInteraction(faces, hands) {
     textSize (70);
 
     if (Mario && mouthSize>50){
-      text ("its-a me! Mario!", 640, 850);
+      //text ("its-a me! Mario!", 640, 850);
+      image (marioSpeak, 0, 0, 1280, 960);
     }
 
     if (Luigi && mouthSize>50){
-      text ("Let's-a go!", 640, 850);
+      //text ("Let's-a go!", 640, 850);
+      image (luigiSpeak, 0, 0, 1280, 960);
     }
     if (Toad && mouthSize>50){
-      text ("Yahoo!", 640, 850);
+      //text ("Yahoo!", 640, 850);
+      image (toadSpeak, 0, 0, 1280, 960);
     }
 
     if (Peach && mouthSize>50){
-      text ("Peachy!", 640, 850);
+      //text ("Peachy!", 640, 850);
+      image (peachSpeak, 0, 0, 1280, 960);
     }
     } //speak
 
@@ -615,127 +675,140 @@ function drawInteraction(faces, hands) {
   //------------------------------------------------------
   // You can make addtional elements here, but keep the face drawing inside the for loop. 
 
+  if (infoBox){
+    push ();
+    
+    textFont (marioFont);
+    text ("im a potato", 640, 480);
 
 
+    pop ();
+  }
+
+} //stop drawing for drawInteraction
+    
 //frames
-if (frames){
-if (drawBrickFrame){
-push ();
-imageMode (CENTER);
-translate (640, 480);
+function drawFrames (){
+  if (drawBrickFrame){
+  push ();
+  imageMode (CENTER);
+  translate (640, 480);
 
-if (hideOverlay){ //down arrow to hide UI
-  if (brickScale<1){ 
-  brickScale = brickScale+0.011
-  scale (brickScale);
-  image (BrickFrame, 0, 0, 1280, 960);
-  }
-  else {
+  if (hideOverlay){ //down arrow to hide UI
+    if (brickScale<1){ 
+    brickScale = brickScale+0.011
+    scale (brickScale);
     image (BrickFrame, 0, 0, 1280, 960);
+    }
+    else {
+      image (BrickFrame, 0, 0, 1280, 960);
+    }
   }
-}
-if (showOverlay){ //up arrow to show UI
-  if (brickScale>0.726) { 
-  brickScale = brickScale-0.0105
-  scale (brickScale);
-  image (BrickFrame, 0, 0, 1280, 960);
-  }
-  else {
-    scale (0.726);
+  if (showOverlay){ //up arrow to show UI
+    if (brickScale>0.726) { 
+    brickScale = brickScale-0.0105
+    scale (brickScale);
     image (BrickFrame, 0, 0, 1280, 960);
+    }
+    else {
+      scale (0.726);
+      image (BrickFrame, 0, 0, 1280, 960);
+    }
   }
-}
-pop ();
-} //brick frame
+  pop ();
+  } //brick frame
 
-if (drawLevelFrame){
-push ();
-imageMode (CENTER);
-translate (640, 480);
+  if (drawLevelFrame){
+  push ();
+  imageMode (CENTER);
+  translate (640, 480);
 
-if (hideOverlay){ //down arrow to hide UI
-  if (levelScale<1){ 
-  levelScale = levelScale+0.011
-  scale (levelScale);
-  image (LevelFrame, 0, 0, 1280, 960);
-  }
-  else {
+  if (hideOverlay){ //down arrow to hide UI
+    if (levelScale<1){ 
+    levelScale = levelScale+0.011
+    scale (levelScale);
     image (LevelFrame, 0, 0, 1280, 960);
+    }
+    else {
+      image (LevelFrame, 0, 0, 1280, 960);
+    }
   }
-}
-if (showOverlay){ //up arrow to show UI
-  if (levelScale>0.726) { 
-  levelScale = levelScale-0.0105
-  scale (levelScale);
-  image (LevelFrame, 0, 0, 1280, 960);
-  }
-  else {
-    scale (0.726);
+  if (showOverlay){ //up arrow to show UI
+    if (levelScale>0.726) { 
+    levelScale = levelScale-0.0105
+    scale (levelScale);
     image (LevelFrame, 0, 0, 1280, 960);
+    }
+    else {
+      scale (0.726);
+      image (LevelFrame, 0, 0, 1280, 960);
+    }
   }
-}
-pop ();
-} //level frame
+  pop ();
+  } //level frame
 
-if (drawRainbowFrame){
-push ();
-imageMode (CENTER);
-translate (640, 480);
+  if (drawRainbowFrame){
+  push ();
+  imageMode (CENTER);
+  translate (640, 480);
 
-if (hideOverlay){ //down arrow to hide UI
-  if (rainbowScale<1) { 
-  rainbowScale = rainbowScale+0.0105 //0.0077
-  scale (rainbowScale);
-  image (RainbowFrame, 0, 0, 1280, 960);
-  }
-  else {
+  if (hideOverlay){ //down arrow to hide UI
+    if (rainbowScale<1) { 
+    rainbowScale = rainbowScale+0.0105 //0.0077
+    scale (rainbowScale);
     image (RainbowFrame, 0, 0, 1280, 960);
-  }
-  }
-if (showOverlay){ //up arrow to show UI
-  if (rainbowScale>0.72){ 
-  rainbowScale = rainbowScale-0.0115
-  scale (rainbowScale);
-  image (RainbowFrame, 0, 0, 1280, 960);
-  }
-  else {
-    scale (0.72);
+    }
+    else {
+      image (RainbowFrame, 0, 0, 1280, 960);
+    }
+    }
+  if (showOverlay){ //up arrow to show UI
+    if (rainbowScale>0.72){ 
+    rainbowScale = rainbowScale-0.0115
+    scale (rainbowScale);
     image (RainbowFrame, 0, 0, 1280, 960);
-  }
-  }
-pop ();
-} //rianbow frame
+    }
+    else {
+      scale (0.72);
+      image (RainbowFrame, 0, 0, 1280, 960);
+    }
+    }
+  pop ();
+  } //rianbow frame
 
 } //stop drawing frames
 
 //overlay 
-if (drawOverlay){
-push ();
-imageMode (CENTER);
-translate (640, 480);
-scale (1);
+function drawOverlay (){
+  if (overlay){
+  push ();
+  imageMode (CENTER);
+  translate (640, 480);
+  scale (1);
 
-if (hideOverlay){ //down arrow to hide UI
-  if (overlayScale<1.388){ 
-  overlayScale = overlayScale+0.015
-  scale (overlayScale);
-  image (Overlay, 0, 0, 1280, 960);
-  }
-}
-if (showOverlay){ //up arrow to show UI
-  if (overlayScale>1) { 
-  overlayScale = overlayScale-0.015
-  scale (overlayScale);
-  image (Overlay, 0, 0, 1280, 960);
-  }
-  else {
+  if (hideOverlay){ //down arrow to hide UI
+    if (overlayScale<1.388){ 
+    overlayScale = overlayScale+0.015
+    scale (overlayScale);
     image (Overlay, 0, 0, 1280, 960);
+    }
   }
+  if (showOverlay){ //up arrow to show UI
+    if (overlayScale>1) { 
+    overlayScale = overlayScale-0.015
+    scale (overlayScale);
+    image (Overlay, 0, 0, 1280, 960);
+    }
+    else {
+      image (Overlay, 0, 0, 1280, 960);
+    }
+  }
+  pop ();
+  } //strop drawing overlay
 }
-pop ();
-} //strop drawing overlay
 
-} //stop drawing for drawInteraction
+
+
 
 
 function drawConnections(hand) {
