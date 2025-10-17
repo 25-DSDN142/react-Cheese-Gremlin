@@ -685,6 +685,9 @@ function keyPressed() {
     placeSticker = (true);
     sticker = random([coinSticker, flowerSticker, goombaSticker, piranhaSticker, shellSticker, starSticker, tubeSticker]); //chooses what random sickers is placed
   }
+  if (key === 'r' || key === 'R'){
+    placeSticker = (false);
+  }
   //info box
   if (key === "["){
     if (infoBox){

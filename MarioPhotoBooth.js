@@ -28,16 +28,18 @@ let drawLevelFrame = (false);
 let drawRainbowFrame = (false);
 
 let speak = (true);
+
 let OutlineThickness = (5);
-let Mario = (false);
+let Mario = (true);
 let Luigi = (false);
 let Toad = (false);
-let Peach = (true);
+let Peach = (false);
   let skinColour = [255, 198, 157];
   let mustacheColour = [99, 59, 7];
 
 
 function prepareInteraction() {
+ gradientImg = loadImage ('/images/gradient.png')
  Overlay = loadImage ('/images/Overlay.png');
  BrickFrame = loadImage ('/images/BrickFrame.png');
  LevelFrame = loadImage ('/images/LevelFrame.png');
@@ -143,19 +145,13 @@ function drawInteraction(faces, hands) {
       Peach = (true);
     }
 
-    //placae sticker
-  if (drawSticker){
+  //place stickers
+  if (drawSticker){ //doesnt work as intended but not enough time/ knowledge to fix (is supposed to draw and finger pos and stay there rather than moving with finger)
     push ();
     imageMode (CENTER);
-
-
-
     if (placeSticker){ //places random sticker when s is pressed
       image (sticker, stickerPosX, stickerPosY, 120, 120);
-
     } //place stickers
-    
-
     pop ();
   }//drawstickers 
 
@@ -222,10 +218,8 @@ function drawInteraction(faces, hands) {
     Start drawing on the face here
     */
 
-    
     let faceWidth = (face.faceOval.width);
     let faceHeight = (face.faceOval.height);
-
 
     let hatCentreX = (0)  //made 0 so hat is drawn at top left corner to canvas so rotationg aligns properly
     let hatCentreY = (0)
@@ -241,77 +235,53 @@ function drawInteraction(faces, hands) {
     let noseWidth = (face.faceOval.width/3.5);
     let hatLogoWidth = (face.faceOval.width/3)
 
+    let realMustacheCentreX = (face.keypoints[4].x);
+    let realMustacheCentreY = ((face.keypoints[4].y)+10);
+    let mustacheCentreX = (0);
+    let mustacheCentreY = (0);
+
+    // let mustacheRightEndX = (face.keypoints[352].x);
+    // let mustacheRightEndY = (face.keypoints[352].y);
+    let mustacheRightEndX = (mustacheCentreX + (faceWidth/2));
+    let mustacheRightEndY = (mustacheCentreY - (faceHeight/15));
+
+    // let mustacheLeftEndX = (face.keypoints[123].x);
+    // let mustacheLeftEndY = ((face.keypoints[123].y));
+    let mustacheLeftEndX = (mustacheCentreX - (faceWidth/2));
+    let mustacheLeftEndY = (mustacheCentreY - (faceHeight/15));
 
     if (Mario) {
     push ();
     //variables for only mario
     let hatColour = [198, 25, 8];
-
-    let mustacheCentreX = (face.keypoints[4].x);
-    let mustacheCentreY = ((face.keypoints[4].y)+10);
-
-    let mustacheRightEndX = (face.keypoints[352].x);
-    let mustacheRightEndY = (face.keypoints[352].y);
     //let rightSwoopMiddle = dist (mustacheCentreX, mustacheCentreY, mustacheRightEndX, mustacheRightEndY); 
-    let rightSwoop3X = ((mustacheCentreX + mustacheRightEndX)/2.02); //left upper point of middle mustache swoop on right hand since
+    let rightSwoop3X = ((mustacheCentreX + mustacheRightEndX)/2.5); //left upper point of middle mustache swoop on right hand since
     let rightSwoop1X = ((rightSwoop3X + mustacheRightEndX)/1.99); //left upper point of right most mustache swoop on right hand since
     let rightSwoop2X = ((rightSwoop3X + rightSwoop1X)/1.97);
     let rightSwoop4X = ((mustacheCentreX + rightSwoop3X)/2);
-    let mustacheRightY = (((noseCentreY + mustacheRightEndY)/2)+20);
+    //let mustacheRightY = (((noseCentreY + mustacheRightEndY)/2)+20);
+    let mustacheRightY = (mustacheRightEndY+ (faceHeight/11));
 
-    let mustacheLeftEndX = (face.keypoints[123].x);
-    let mustacheLeftEndY = ((face.keypoints[123].y));
-    let leftSwoop3X = ((mustacheCentreX + mustacheLeftEndX)/1.97); //left upper point of middle mustache swoop on left hand since
+    let leftSwoop3X = ((mustacheCentreX + mustacheLeftEndX)/2.5); //left upper point of middle mustache swoop on left hand since
     let leftSwoop1X = ((leftSwoop3X + mustacheLeftEndX)/1.99); //left upper point of left most mustache swoop on left hand since
     let leftSwoop2X = ((leftSwoop3X + leftSwoop1X)/2.02);
     let leftSwoop4X = ((mustacheCentreX + leftSwoop3X)/2);
-    let mustacheLeftY = (((noseCentreY + mustacheLeftEndY)/2)+20);
+    //let mustacheLeftY = (((noseCentreY + mustacheLeftEndY)/2)+20);
+    let mustacheLeftY = (mustacheLeftEndY+ (faceHeight/11));
 
     let mustacheThicknessY = (face.faceOval.height/4.5);
-
     
 
     // mustache
+    push ();
       stroke (0, 0, 0);
       strokeWeight (OutlineThickness);
       fill (mustacheColour);
 
-      //mustache attempt#1
-      // beginShape ();
-      // vertex (mustacheCentreX, mustacheCentreY); //top middle
-      // quadraticVertex (mustacheCentreX+(rightSwoopMiddle/2), mustacheCentreY+20, mustacheRightEndX, mustacheRightEndY); //right end
-      // quadraticVertex (mustacheRightEndX, mustacheCentreY+(mustacheThicknessY/3), mustacheRightEndX-(rightSwoopMiddle/4), mustacheCentreY+(mustacheThicknessY/4));
-      // quadraticVertex (mustacheCentreX+(rightSwoopMiddle/1.5), mustacheCentreY+(mustacheThicknessY/1.5), mustacheCentreX+(rightSwoopMiddle/2.5), mustacheCentreY+(mustacheThicknessY/2));
-      // quadraticVertex (mustacheCentreX+(rightSwoopMiddle/4), mustacheCentreY+(mustacheThicknessY/1.1), mustacheCentreX, mustacheCentreY+(mustacheThicknessY)/1.6);
-      // endShape ();
-
-      //mustache attempt#2
-      // beginShape (); 
-      // vertex (mustacheCentreX, mustacheCentreY); //top middle
-      // quadraticVertex (rightSwoop3X, mustacheCentreY+20, mustacheRightEndX, mustacheRightEndY); //right end
-      // quadraticVertex (mustacheRightEndX, mustacheRightY+(mustacheThicknessY/3), rightSwoop1X, mustacheRightY+(mustacheThicknessY/4));
-      // quadraticVertex (rightSwoop2X, mustacheRightY+(mustacheThicknessY/1.5), rightSwoop3X, mustacheRightY+(mustacheThicknessY/2));
-      // quadraticVertex (rightSwoop4X, mustacheRightY+(mustacheThicknessY/1.1), mustacheCentreX, mustacheRightY+(mustacheThicknessY)/1.6);
-      // endShape ();
-      
-      //mustache attempt#3
-      // beginShape (); //right side
-      // vertex (mustacheCentreX, mustacheCentreY); //top middle
-      // quadraticVertex (rightSwoop3X, mustacheCentreY+(faceHeight/20), mustacheRightEndX, mustacheRightEndY); //right end
-      // quadraticVertex (mustacheRightEndX, mustacheRightY+(faceHeight/14), rightSwoop1X, mustacheRightY+(faceHeight/18));
-      // quadraticVertex (rightSwoop2X, mustacheRightY+(faceHeight/7), rightSwoop3X, mustacheRightY+(faceHeight/9));
-      // quadraticVertex (rightSwoop4X, mustacheRightY+(faceHeight/5), mustacheCentreX, mustacheCentreY+(faceHeight/7));
-      // endShape ();
-      // beginShape (); //right side
-      // vertex (mustacheCentreX, mustacheCentreY); //top middle
-      // quadraticVertex (leftSwoop3X, mustacheCentreY+(faceHeight/20), mustacheLeftEndX, mustacheLeftEndY); //right end
-      // quadraticVertex (mustacheLeftEndX, mustacheLeftY+(faceHeight/14), leftSwoop1X, mustacheLeftY+(faceHeight/18));
-      // quadraticVertex (leftSwoop2X, mustacheLeftY+(faceHeight/7), leftSwoop3X, mustacheLeftY+(faceHeight/9));
-      // quadraticVertex (leftSwoop4X, mustacheLeftY+(faceHeight/5), mustacheCentreX, mustacheCentreY+(faceHeight/7));
-      // endShape ();
-
-      //mustache attempt#3 commbined
-      push ();
+      //makes mustache rotate with face 
+      angleMode (RADIANS);
+      translate (realMustacheCentreX, realMustacheCentreY); //moves mustache centre from 0,0 to face point at middle of face
+      rotate(rotateAmount);
 
       beginShape (); 
       vertex (mustacheCentreX, mustacheCentreY); //top middle
@@ -323,8 +293,7 @@ function drawInteraction(faces, hands) {
       quadraticVertex (leftSwoop2X, mustacheLeftY+(faceHeight/7), leftSwoop1X, mustacheLeftY+(faceHeight/18));
       quadraticVertex (mustacheLeftEndX, mustacheLeftY+(faceHeight/14), mustacheLeftEndX, mustacheLeftEndY);
       quadraticVertex (leftSwoop3X, mustacheCentreY+(faceHeight/20), mustacheCentreX, mustacheCentreY);
-      endShape ();
-      pop ();
+      endShape();
 
       pop ();//mustache
 
@@ -393,20 +362,21 @@ function drawInteraction(faces, hands) {
     //variables for only luigi
     let hatColour = [0, 148, 66];
 
-    let mustacheCentreX = (face.keypoints[4].x);
-    let mustacheCentreY = ((face.keypoints[4].y)+10);
-    let mustacheRightEndX = (face.keypoints[352].x);
-    let mustacheRightEndY = (face.keypoints[352].y);
-    let mustacheLeftEndX = (face.keypoints[123].x);
-    let mustacheLeftEndY = ((face.keypoints[123].y));
     let mustacheThicknessX = (face.faceOval.width/15);
     let mustacheThicknessY = (face.faceOval.height/4.5);
     
 
     // mustache
+    push ();
       stroke (0, 0, 0);
       strokeWeight (OutlineThickness);
       fill (mustacheColour);
+
+      //makes mustache rotate with face 
+      angleMode (RADIANS);
+      translate (realMustacheCentreX, realMustacheCentreY); //moves mustache centre from 0,0 to face point at middle of face
+      rotate(rotateAmount);
+
       beginShape ();
       vertex (mustacheCentreX, mustacheCentreY);
       quadraticVertex ((mustacheCentreX+mustacheRightEndX)/2, mustacheCentreY+20, mustacheRightEndX, mustacheRightEndY);
@@ -415,6 +385,7 @@ function drawInteraction(faces, hands) {
       quadraticVertex ((mustacheCentreX+mustacheLeftEndX)/2, mustacheCentreY+20, mustacheCentreX, mustacheCentreY);
       endShape ();
 
+    pop ();
     //nose
       stroke (0, 0, 0);
       strokeWeight (OutlineThickness);
@@ -641,29 +612,35 @@ function drawInteraction(faces, hands) {
     //"speak" displays "catch phrase" for individual characters when mouth open
     let mouthSize = dist (face.keypoints[13].x, face.keypoints[13].y, face.keypoints[14].x, face.keypoints[14].y)
     if (speak){
-    stroke (0, 0, 0);
-    strokeWeight (10);
-    fill (255, 255, 255);
-    textSize (70);
+    push ();
+      stroke (0, 0, 0);
+      strokeWeight (10);
+      fill (255, 255, 255);
+      textSize (70);
 
-    if (Mario && mouthSize>50){
-      //text ("its-a me! Mario!", 640, 850);
-      image (marioSpeak, 0, 0, 1280, 960);
-    }
+      scale (1.1); //adjusing where speak sits without having to redraw loaded in image
+      translate (0, -70);
 
-    if (Luigi && mouthSize>50){
-      //text ("Let's-a go!", 640, 850);
-      image (luigiSpeak, 0, 0, 1280, 960);
-    }
-    if (Toad && mouthSize>50){
-      //text ("Yahoo!", 640, 850);
-      image (toadSpeak, 0, 0, 1280, 960);
-    }
 
-    if (Peach && mouthSize>50){
-      //text ("Peachy!", 640, 850);
-      image (peachSpeak, 0, 0, 1280, 960);
-    }
+      if (Mario && mouthSize>50){
+        //text ("its-a me! Mario!", 640, 850);
+        image (marioSpeak, 0, 0, 1280, 960);
+      }
+
+      if (Luigi && mouthSize>50){
+        //text ("Let's-a go!", 640, 850);
+        image (luigiSpeak, 0, 0, 1280, 960);
+      }
+      if (Toad && mouthSize>50){
+        //text ("Yahoo!", 640, 850);
+        image (toadSpeak, 0, 0, 1280, 960);
+      }
+
+      if (Peach && mouthSize>50){
+        //text ("Peachy!", 640, 850);
+        image (peachSpeak, 0, 0, 1280, 960);
+      }
+    pop ();
     } //speak
 
 
@@ -677,9 +654,48 @@ function drawInteraction(faces, hands) {
 
   if (infoBox){
     push ();
-    
+
+    //grey trasnparent background
+    push ();
+    fill (0, 0, 0, 150);
+    rect (0, 0, 1280, 960);
+    pop ();
+
+    textAlign (CENTER, CENTER);
+    rectMode (CENTER);
+    imageMode (CENTER);
+
+    //box
+    image (gradientImg, 640, 480, 600, 675);
+    strokeWeight (5);
+    //fill (206, 138, 255, 255);
+    noFill ();
+    rect (640, 480, 600, 675);
+
+    //text
+    fill (99, 185, 255);
     textFont (marioFont);
-    text ("im a potato", 640, 480);
+    strokeWeight (10);
+    textSize (60);
+    text ("Information", 640, 200);
+    strokeWeight (5);
+    textFont (pixelFont);
+    textSize (35);
+    fill (100, 157, 255);
+    text ("To select different characters and frames make the shown gesture with your respective hand to toggle the effect", 640, 310, 530);
+    fill (147, 100, 255);
+    text ("Open your mouth to show the characters catchphrase", 640, 430, 530);
+    fill (167, 99, 255);
+    text ("! = screenshot", 640, 510, 530);
+    fill (192, 99, 255);
+    text ("↓ = hide UI", 640, 550, 530);
+    text ("↑ = show UI", 640, 590, 530);
+    fill (231, 99, 255);
+    text ("s = show sticker on left pointer", 640, 630, 530);
+    text ('press s again to randomize sicker', 640, 670, 530);
+    text ("r = hide sticker", 640, 710, 530);
+    fill (252, 99, 255);
+    text ("[ = hide/show info", 640, 760, 530);
 
 
     pop ();
